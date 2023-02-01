@@ -28,7 +28,7 @@
         }
     },
     "extra": {
-        "class": "Setono\\FileChangesPlugin"
+        "class": "Setono\\Composer\\FileChanges\\FileChangesPlugin"
     },
     "scripts": {
         "analyse": "psalm",
