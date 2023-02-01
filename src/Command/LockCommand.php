@@ -26,7 +26,10 @@ final class LockCommand extends BaseCommand
 
     protected function configure(): void
     {
-        $this->setDescription('Will update the file-changes.lock');
+        $this
+            ->setName('setono:file-changes:lock')
+            ->setDescription('Will update the file-changes.lock')
+        ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output): int
