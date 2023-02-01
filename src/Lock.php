@@ -24,7 +24,7 @@ final class Lock
 
     private bool $changed = false;
 
-    public function __construct($lockFile)
+    public function __construct(string $lockFile)
     {
         $this->json = new JsonFile($lockFile);
         if ($this->json->exists()) {
