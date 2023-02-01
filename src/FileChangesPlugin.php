@@ -1,4 +1,5 @@
 <?php
+
 declare(strict_types=1);
 
 namespace Setono\Composer\FileChanges;
@@ -18,11 +19,10 @@ final class FileChangesPlugin implements PluginInterface, Capable, CommandProvid
     public function activate(Composer $composer, IOInterface $io): void
     {
         $composerFile = Factory::getComposerFile();
-        $composerLock = 'json' === pathinfo($composerFile, \PATHINFO_EXTENSION) ? substr($composerFile, 0, -4).'lock' : $composerFile.'.lock';
+        $composerLock = 'json' === pathinfo($composerFile, \PATHINFO_EXTENSION) ? substr($composerFile, 0, -4) . 'lock' : $composerFile . '.lock';
         $fileChangesLock = str_replace('composer', 'file-changes', basename($composerLock));
 
         $this->lock = new Lock($fileChangesLock);
-
     }
 
     public function deactivate(Composer $composer, IOInterface $io): void

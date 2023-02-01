@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Setono\Composer\FileChanges\Command;
 
 use Composer\Command\BaseCommand;
-use Composer\Factory;
 use Setono\Composer\FileChanges\FileChangesPlugin;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -51,6 +50,8 @@ final class LockCommand extends BaseCommand
                 'hash' => md5_file($file),
             ]);
         }
+
+        $lock->write();
 
         return self::SUCCESS;
     }

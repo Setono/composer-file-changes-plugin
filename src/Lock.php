@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the Symfony package.
  *
@@ -17,9 +19,7 @@ final class Lock
 {
     private JsonFile $json;
 
-    /**
-     * @var array<string, array>
-     */
+    /** @var array<string, array> */
     private array $lock = [];
 
     private bool $changed = false;
