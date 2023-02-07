@@ -25,7 +25,7 @@ final class Locker
         }
     }
 
-    public function update(): void
+    public function update(bool $write = true): void
     {
         $configuration = $this->configurationResolver->resolve();
 
@@ -34,7 +34,9 @@ final class Locker
             $this->add($file->relativeFilename, $file->getLockData());
         }
 
-        $this->write();
+        if ($write) {
+            $this->write();
+        }
     }
 
     public function add(string $filename, array $data): void
@@ -59,5 +61,15 @@ final class Locker
         } elseif ($this->lockFile->exists()) {
             @unlink($this->lockFile->getPath());
         }
+
+        $this->changed = false;
+    }
+
+    /**
+     * Returns true if the tracked files have changed since the last write
+     */
+    public function hasChanged(): bool
+    {
+        return $this->changed;
     }
 }
