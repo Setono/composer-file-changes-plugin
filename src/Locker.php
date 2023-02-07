@@ -29,7 +29,7 @@ final class Locker
     {
         $configuration = $this->configurationResolver->resolve();
 
-        $files = $configuration->resolveFiles($this->lockFile->getPath());
+        $files = $configuration->resolveFiles(dirname($this->lockFile->getPath()));
         foreach ($files as $file) {
             $this->add($file, [
                 'hash' => md5_file($file),
