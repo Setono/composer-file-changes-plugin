@@ -15,13 +15,15 @@ final class ConfigurationTest extends TestCase
     public function it_resolves(): void
     {
         $configuration = new Configuration();
-        $configuration->paths[] = 'root/dir';
-        $configuration->paths[] = 'root/file3';
+        $configuration->addPath('root/dir1'); // This will only resolve to files in this directory
+        $configuration->addPath('root/dir2/**/*'); // This will resolve to all files (recursively) under this directory
+        $configuration->addPath('root/file3');
 
         $files = $configuration->resolveFiles(__DIR__);
         self::assertEquals([
-            __DIR__ . '/root/dir/dir2/dir3/file2',
-            __DIR__ . '/root/dir/dir1/file1',
+            __DIR__ . '/root/dir1/file1',
+            __DIR__ . '/root/dir2/dir3/file2',
+            __DIR__ . '/root/dir2/file4',
             __DIR__ . '/root/file3',
         ], $files);
     }

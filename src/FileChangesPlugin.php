@@ -42,7 +42,12 @@ final class FileChangesPlugin implements PluginInterface, Capable, CommandProvid
         $fileChangesLock = str_replace('composer', 'file-changes', basename($composerLock));
 
         return [
-            new LockCommand(new Locker(new JsonFile($fileChangesLock), new ComposerExtraConfigurationResolver(new ComposerData($composerFile)))),
+            new LockCommand(
+                new Locker(
+                    new JsonFile($fileChangesLock),
+                    new ComposerExtraConfigurationResolver(new ComposerData($composerFile))
+                )
+            ),
         ];
     }
 }

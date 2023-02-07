@@ -44,7 +44,7 @@ final class ComposerExtraConfigurationResolver implements ConfigurationResolverI
                 continue;
             }
 
-            $configuration->paths[] = $path;
+            $configuration->addPath($path);
         }
 
         return $configuration;

@@ -31,9 +31,7 @@ final class Locker
 
         $files = $configuration->resolveFiles(dirname($this->lockFile->getPath()));
         foreach ($files as $file) {
-            $this->add($file, [
-                'hash' => md5_file($file),
-            ]);
+            $this->add($file->filename, $file->getLockData());
         }
 
         $this->write();

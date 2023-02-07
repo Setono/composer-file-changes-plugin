@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Setono\Composer\FileChanges\Configuration;
 
+use Webmozart\Glob\Glob;
+
 final class Configuration
 {
     /**
@@ -11,12 +13,14 @@ final class Configuration
      *
      * Each path is relative to the composer.json directory
      */
-    public array $paths = [];
+    private array $paths = [];
 
     /**
+     * This method will return all files that the configured paths resolves to
+     *
      * @param string $relativeTo The path where the files are resolved relative to
      *
-     * @return list<string>
+     * @return list<File>
      *
      * @throws \RuntimeException if a file doesn't exist
      */
@@ -27,28 +31,42 @@ final class Configuration
         $files = [];
         foreach ($this->paths as $path) {
             $absolutePath = $relativeTo . '/' . $path;
-            if (!file_exists($absolutePath)) {
-                throw new \RuntimeException(sprintf('The path %s does not exist', $absolutePath));
-            }
 
             if (is_file($absolutePath)) {
-                $files[] = $absolutePath;
+                $files[] = new File($absolutePath, md5_file($absolutePath), $path);
 
                 continue;
             }
 
-            $directoryIterator = new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($absolutePath), \RecursiveIteratorIterator::LEAVES_ONLY);
+            $glob = $absolutePath;
+            if (is_dir($absolutePath)) {
+                $glob = sprintf('%s/*', $absolutePath);
+            }
 
-            /** @var \SplFileInfo $file */
-            foreach ($directoryIterator as $file) {
-                if ($file->isDir()) {
+            foreach (Glob::glob($glob) as $file) {
+                if (!is_file($file)) {
                     continue;
                 }
 
-                $files[] = $file->getPathname();
+                $files[] = new File($file, md5_file($file), $path);
             }
         }
 
         return $files;
+    }
+
+    public function addPath(string $path): void
+    {
+        $this->paths[] = rtrim($path, '/');
+    }
+
+    /**
+     * Returns a list of files or directories. Directories DOES not have a trailing slash
+     *
+     * @return list<string>
+     */
+    public function getPaths(): array
+    {
+        return $this->paths;
     }
 }
