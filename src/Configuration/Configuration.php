@@ -26,7 +26,7 @@ final class Configuration
      */
     public function resolveFiles(string $relativeTo): array
     {
-        $relativeTo = rtrim($relativeTo, '/');
+        $relativeTo = rtrim(realpath($relativeTo), '/');
 
         $files = [];
         foreach ($this->paths as $path) {
