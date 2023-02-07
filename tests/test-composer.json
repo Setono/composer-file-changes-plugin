@@ -1,0 +1,14 @@
+{
+    "name": "setono/test-file",
+    "type": "library",
+    "require": {
+        "php": ">=8.1"
+    },
+    "extra": {
+        "file-changes": {
+            "paths": [
+                "vendor/path/filename"
+            ]
+        }
+    }
+}
