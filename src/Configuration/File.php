@@ -9,6 +9,10 @@ final class File
     public function __construct(
         public readonly string $filename,
         /**
+         * This is the filename as it would have been in the composer.json configuration
+         */
+        public readonly string $relativeFilename,
+        /**
          * The hash for the file
          */
         public readonly string $hash,

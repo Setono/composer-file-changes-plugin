@@ -33,7 +33,7 @@ final class Configuration
             $absolutePath = $relativeTo . '/' . $path;
 
             if (is_file($absolutePath)) {
-                $files[] = new File($absolutePath, md5_file($absolutePath), $path);
+                $files[] = new File($absolutePath, $path, md5_file($absolutePath), $path);
 
                 continue;
             }
@@ -48,7 +48,7 @@ final class Configuration
                     continue;
                 }
 
-                $files[] = new File($file, md5_file($file), $path);
+                $files[] = new File($file, str_replace($relativeTo . '/', '', $file), md5_file($file), $path);
             }
         }
 

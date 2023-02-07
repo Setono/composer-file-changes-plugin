@@ -31,7 +31,7 @@ final class Locker
 
         $files = $configuration->resolveFiles(dirname($this->lockFile->getPath()));
         foreach ($files as $file) {
-            $this->add($file->filename, $file->getLockData());
+            $this->add($file->relativeFilename, $file->getLockData());
         }
 
         $this->write();
