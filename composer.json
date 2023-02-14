@@ -1,6 +1,7 @@
 {
     "name": "setono/composer-file-changes-plugin",
     "description": "Monitor file changes in your dependencies",
+    "license": "MIT",
     "type": "composer-plugin",
     "require": {
         "php": ">=8.1",
@@ -26,11 +27,11 @@
         }
     },
     "config": {
-        "sort-packages": true,
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": false,
             "ergebnis/composer-normalize": true
-        }
+        },
+        "sort-packages": true
     },
     "extra": {
         "class": "Setono\\Composer\\FileChanges\\FileChangesPlugin"
