@@ -39,6 +39,6 @@
     "scripts": {
         "analyse": "psalm",
         "check-style": "ecs check",
-        "fix-style": "ecs check --fix",
+        "fix-style": "ecs check --fix"
     }
 }
