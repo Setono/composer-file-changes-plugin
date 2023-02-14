@@ -59,9 +59,6 @@ jobs:
                 dependencies:
                     - "highest"
 
-                symfony:
-                    - "^6.0"
-
         steps:
             -   name: "Checkout"
                 uses: "actions/checkout@v3"
@@ -72,14 +69,12 @@ jobs:
                     coverage: "none"
                     extensions: "${{ env.PHP_EXTENSIONS }}"
                     php-version: "${{ matrix.php-version }}"
-                    tools: "composer-require-checker, composer-unused, flex"
+                    tools: "composer-require-checker, composer-unused"
 
             -   name: "Install composer dependencies"
                 uses: "ramsey/composer-install@v2"
                 with:
                     dependency-versions: "${{ matrix.dependencies }}"
-                env:
-                    SYMFONY_REQUIRE: "${{ matrix.symfony }}"
 
             -   name: "Run maglnet/composer-require-checker"
                 run: "composer-require-checker check"
@@ -101,9 +96,6 @@ jobs:
                 dependencies:
                     - "highest"
 
-                symfony:
-                    - "^6.0"
-
         steps:
             -   name: "Checkout"
                 uses: "actions/checkout@v3"
@@ -114,14 +106,11 @@ jobs:
                     php-version: "${{ matrix.php-version }}"
                     extensions: "${{ env.PHP_EXTENSIONS }}"
                     coverage: "none"
-                    tools: "flex"
 
             -   name: "Install composer dependencies"
                 uses: "ramsey/composer-install@v2"
                 with:
                     dependency-versions: "${{ matrix.dependencies }}"
-                env:
-                    SYMFONY_REQUIRE: "${{ matrix.symfony }}"
 
             -   name: "Static analysis"
                 run: "vendor/bin/psalm"
@@ -141,9 +130,6 @@ jobs:
                     - "lowest"
                     - "highest"
 
-                symfony:
-                    - "^6.0"
-
         steps:
             -   name: "Checkout"
                 uses: "actions/checkout@v3"
@@ -154,14 +140,11 @@ jobs:
                     php-version: "${{ matrix.php-version }}"
                     extensions: "${{ env.PHP_EXTENSIONS }}"
                     coverage: "none"
-                    tools: "flex"
 
             -   name: "Install composer dependencies"
                 uses: "ramsey/composer-install@v2"
                 with:
                     dependency-versions: "${{ matrix.dependencies }}"
-                env:
-                    SYMFONY_REQUIRE: "${{ matrix.symfony }}"
 
             -   name: "Run phpunit"
                 run: "composer phpunit"
