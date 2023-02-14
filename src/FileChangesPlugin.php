@@ -14,6 +14,7 @@ use Composer\Plugin\Capable;
 use Composer\Plugin\PluginInterface;
 use Composer\Script\Event;
 use Composer\Script\ScriptEvents;
+use Composer\Util\ProcessExecutor;
 use Setono\Composer\FileChanges\Command\LockCommand;
 use Setono\Composer\FileChanges\Configuration\ComposerExtraConfigurationResolver;
 
@@ -21,6 +22,11 @@ final class FileChangesPlugin implements PluginInterface, Capable, CommandProvid
 {
     public function activate(Composer $composer, IOInterface $io): void
     {
+        // this logic is copied from Symfony Flex plugin
+        $win = '\\' === \DIRECTORY_SEPARATOR;
+        if (!@is_executable(strtok(exec($win ? 'where git' : 'command -v git'), \PHP_EOL))) {
+            throw new \RuntimeException('Cannot activate file changes plugin: git not found.');
+        }
     }
 
     public function deactivate(Composer $composer, IOInterface $io): void
@@ -68,13 +74,11 @@ final class FileChangesPlugin implements PluginInterface, Capable, CommandProvid
 
         $exists = $lockFile->exists();
 
-        $locker->update(false);
+        $locker->update();
 
-        if ($locker->hasChanged()) {
+        if ($this->hasLockFileChanged($event->getIO())) {
             throw new \RuntimeException(sprintf('The file-changes.lock has been %s. Commit this file to version control before updating.', $exists ? 'created' : 'updated'));
         }
-
-        $locker->write();
     }
 
     public function postUpdate(Event $event): void
@@ -83,13 +87,11 @@ final class FileChangesPlugin implements PluginInterface, Capable, CommandProvid
             new JsonFile(self::getLockFilename()),
             new ComposerExtraConfigurationResolver(new ComposerData(self::getComposerFilename())),
         );
-        $locker->update(false);
+        $locker->update();
 
-        if ($locker->hasChanged()) {
+        if ($this->hasLockFileChanged($event->getIO())) {
             $event->getIO()->error('The file-changes.lock has changed. Review these changes and act accordingly.');
         }
-
-        $locker->write();
     }
 
     private static function getComposerFilename(): string
@@ -104,5 +106,29 @@ final class FileChangesPlugin implements PluginInterface, Capable, CommandProvid
         $composerLock = 'json' === pathinfo($composerFile, \PATHINFO_EXTENSION) ? substr($composerFile, 0, -4) . 'lock' : $composerFile . '.lock';
 
         return str_replace('composer', 'file-changes', basename($composerLock));
+    }
+
+    private function hasLockFileChanged(IOInterface $io): bool
+    {
+        $output = '';
+
+        $processExecutor = new ProcessExecutor($io);
+        $processExecutor->execute('git status --porcelain', $output);
+
+        /** @psalm-suppress MixedArgument,PossiblyNullArgument */
+        $output = trim($output);
+
+        if ('' === $output) {
+            return false;
+        }
+
+        $files = explode(\PHP_EOL, $output);
+        foreach ($files as $file) {
+            if (str_ends_with($file, 'file-changes.lock')) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

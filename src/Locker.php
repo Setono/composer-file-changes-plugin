@@ -64,12 +64,4 @@ final class Locker
 
         $this->changed = false;
     }
-
-    /**
-     * Returns true if the tracked files have changed since the last write
-     */
-    public function hasChanged(): bool
-    {
-        return $this->changed;
-    }
 }
