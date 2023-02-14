@@ -20,11 +20,18 @@ final class ConfigurationTest extends TestCase
         $configuration->addPath('root/file3');
 
         $files = $configuration->resolveFiles(__DIR__);
-        self::assertEquals([
+        self::assertCount(4, $files);
+
+        $expectedFilenames = [
             __DIR__ . '/root/dir1/file1',
             __DIR__ . '/root/dir2/dir3/file2',
             __DIR__ . '/root/dir2/file4',
             __DIR__ . '/root/file3',
-        ], $files);
+        ];
+
+        for ($i = 0; $i < 4; ++$i) {
+            $file = $files[$i];
+            self::assertSame($expectedFilenames[$i], $file->filename);
+        }
     }
 }
