@@ -1,5 +1,6 @@
 {
     "name": "setono/composer-file-changes-plugin",
+    "description": "Monitor file changes in your dependencies",
     "type": "composer-plugin",
     "require": {
         "php": ">=8.1",
