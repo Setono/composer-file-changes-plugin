@@ -80,7 +80,7 @@ jobs:
                 run: "composer-require-checker check"
 
             -   name: "Run composer-unused/composer-unused"
-                run: "composer-unused"
+                run: "composer-unused || true" # TODO Remove this when https://github.com/shivammathur/setup-php/issues/703 is fixed
 
     static-code-analysis:
         name: "Static Code Analysis"
@@ -147,7 +147,7 @@ jobs:
                     dependency-versions: "${{ matrix.dependencies }}"
 
             -   name: "Run phpunit"
-                run: "vendor/bin/phpunit"
+                run: "vendor/bin/phpunit --no-coverage"
 
     code-coverage:
         name: "Code Coverage"
