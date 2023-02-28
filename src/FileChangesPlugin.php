@@ -22,10 +22,23 @@ final class FileChangesPlugin implements PluginInterface, Capable, CommandProvid
 {
     public function activate(Composer $composer, IOInterface $io): void
     {
-        // this logic is copied from Symfony Flex plugin
+        // some of this logic is copied from Symfony Flex plugin
         $win = '\\' === \DIRECTORY_SEPARATOR;
-        if (!@is_executable(strtok(exec($win ? 'where git' : 'command -v git'), \PHP_EOL))) {
-            throw new \RuntimeException('Cannot activate file changes plugin: git not found.');
+
+        $exception = new \RuntimeException('Cannot activate file changes plugin: git not found.');
+
+        $output = exec($win ? 'where git' : 'command -v git');
+        if (false === $output) {
+            throw $exception;
+        }
+
+        $command = strtok($output, \PHP_EOL);
+        if (false === $command) {
+            throw $exception;
+        }
+
+        if (!is_executable($command)) {
+            throw $exception;
         }
     }
 
